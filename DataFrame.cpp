@@ -1,4 +1,3 @@
-/*
 #include <iostream>
 using namespace std;
 
@@ -46,7 +45,7 @@ int main() {
 	//First line: 2 numbers seperated by space;
 	//			  first number is number of rows (r) and
 	//			  second number is number of columns (c)
-	
+
 	cin >> nRows >> nCols;
 	DataFrame* firstDF = new DataFrame(nRows, nCols);
 
@@ -122,5 +121,6 @@ int main() {
 	(*myTable).display();
 
 	delete myTable;
+	*/
 
-*/
+}
