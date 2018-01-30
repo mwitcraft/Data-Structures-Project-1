@@ -12,8 +12,11 @@ protected:
 
 public:
 	//Constructors
-	DataFrame();
-	DataFrame(int rows, int cols);
+	DataFrame() {};
+	DataFrame(int rows, int cols) {
+		numRows = rows;
+		numCols = cols;
+	};
 
 	//Output method
 	void display();
@@ -46,7 +49,7 @@ int main() {
 	//First line: 2 numbers seperated by space;
 	//			  first number is number of rows (r) and
 	//			  second number is number of columns (c)
-	
+
 	cin >> nRows >> nCols;
 	DataFrame* firstDF = new DataFrame(nRows, nCols);
 
@@ -66,9 +69,9 @@ int main() {
 
 	//Execute the following code when i think its complete??
 
-/*
+	/*
 	for (int i = 0; i < 3; i++) {
-		cin >> selectC[i];
+	cin >> selectC[i];
 	}
 
 	DataFrame* tempColumns = (*firstDF).getColumns(selectC, 3);
@@ -85,7 +88,7 @@ int main() {
 	//Read the row numbers that you want to extract
 
 	for (int i = 0; i < 10; i++) {
-		cin >> selectR[i];
+	cin >> selectR[i];
 	}
 
 	DataFrame* tempRows = (*firstDF).getRows(selectR, 10);
@@ -114,13 +117,14 @@ int main() {
 	DataFrame* myTable = new DataFrame(5, 5);
 
 	for (int i = 0; i < 5; i++) {
-		for (int j = 0; j < 5; j++) {
-			(*myTable)[i][j] = i * j;
-		}
+	for (int j = 0; j < 5; j++) {
+	(*myTable)[i][j] = i * j;
+	}
 	}
 
 	(*myTable).display();
 
 	delete myTable;
 
-*/
+	*/
+
