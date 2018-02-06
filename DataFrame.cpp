@@ -6,27 +6,81 @@ protected:
 	int**   table;
 	int     numRows;
 	int     numCols;
-	char**  colNames;
 	char**  rowNames;
+	char**  colNames;
 
 public:
 	//Constructors
 	DataFrame();
-	DataFrame(int rows, int cols);
+	DataFrame(int rows, int cols){
+        numRows = rows;
+        numCols = cols;
+
+        rowNames = new char*[rows];
+        colNames = new char*[cols];
+	}
 
 	//Output method
-	void display();
+	void display(){
+		table = new int*[numRows];
+		for (int i = 0; i < numRows; i++) {
+			table[i] = new int[numCols];
+		}
+
+		for (int i = 0; i < numRows; i++) {
+			for (int j = 0; j < numCols; j++) {
+				int num;
+				cin >> num;
+				table[i][j] = num;
+			}
+		}
+
+        for(int i = 0; i < numCols; i++){
+            if(i == numCols - 1)
+                cout << colNames[i] << '\n';
+            else
+                cout << colNames[i] << ",";
+        }
+
+        for(int i = 0; i < numRows; i++){
+            if(i == numRows - 1)
+                cout << rowNames[i] << '\n';
+            else
+                cout << rowNames[i] << ",";
+        }
+
+        for(int i = 0; i < numRows; i++){
+            for(int j = 0; j < numCols; j++){
+                cout << table[i][j] << " ";
+            }
+            cout << endl;
+        }
+                    //cout << "(" << i << "," << j << ")" << " -> " << table[i][j] << endl;
+
+	}
 
 	//Setters
-	void setRowName(int row, char* name);
-	void setColName(int col, char* name);
+	void setRowName(int row, char* name){
+        rowNames[row] = name;
+	}
+	void setColName(int col, char* name){
+        colNames[col] = name;
+	}
 	int* operator[](int i); //Get row i
 
 	//Getters
-	char** getRowNames();
-	char** getColNames();
-	int getNumberRows();
-	int getNumberCols();
+	char** getRowNames(){
+        return rowNames;
+	}
+	char** getColNames(){
+        return colNames;
+	}
+	int getNumberRows(){
+        return numRows;
+	}
+	int getNumberCols(){
+        return numCols;
+	}
 	DataFrame* getColumns(int* columns, int cLen);
 	DataFrame* getRows(int* rows, int rLen);
 	DataFrame* getRowsCols(int* rows, int rLen, int* cols, int cLen);
@@ -50,7 +104,51 @@ int main() {
 	DataFrame* firstDF = new DataFrame(nRows, nCols);
 
 	//Second line: strings seperated by a comma (nCols of them); representing column names
+    for(int i = 0; i < nCols; i++){
+        //Initailizes char* name to have length of 100 because we don't know actual size (yet)
+        char* name = new char[100];
+        char c;
+        //Must use cin >> to select next 'real' character (not '\n')
+        cin >> c;
+        int j = 0;
+        //If c == ',' or '\n' then that is the end of that name
+        while(c != ',' && c != '\n'){
+            name[j] = c;
+            //use cin.get because that actually selects the next character, regardless of what it is (actually selects '\n')
+            cin.get(c);
+            j++;
+        }
+            //Signals end of name[]
+            name[j] = '\0';
+            firstDF->setColName(i, name);
+    }
+
+    //for(int i = 0; i < nCols; i++){
+      //  cout << firstDF->getColNames()[i] << " ";
+    //}
+    //cout << endl;
+    //cout << "**********************" << endl;
 	//Third line: string seperated by a comma (nRows of them); representing row names
+	//Exact same as above but this time setting the column names
+    for(int i = 0; i < nRows; i++){
+        char* name = new char[100];
+        char c;
+        cin >> c;
+        int j = 0;
+        while(c != ',' && c != '\n'){
+            name[j] = c;
+            cin.get(c);
+            j++;
+        }
+            name[j] = '\0';
+            firstDF->setRowName(i, name);
+    }
+
+    firstDF->display();
+
+    //for(int i = 0; i < nRows; i++){
+      //  cout << firstDF->getRowNames()[i] << endl;
+    //}
 	//Fourth line and more: nCols number of integers in each of the nRows rows seperated by a space
 	//						in between integers in the same row
 
@@ -60,6 +158,7 @@ int main() {
 	// - column names of the dataframe
 	// - row names of the dataframe
 	// - contents of the table in the dataframe
+
 
 	//TODO: complete code for the above comment block^^^
 
@@ -122,5 +221,4 @@ int main() {
 
 	delete myTable;
 	*/
-
 }
