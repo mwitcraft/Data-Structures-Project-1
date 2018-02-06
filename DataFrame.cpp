@@ -18,22 +18,31 @@ public:
 
         rowNames = new char*[rows];
         colNames = new char*[cols];
+
+        table = new int*[numRows];
+        for(int i = 0; i < numRows; i++){
+            table[i] = new int[numCols];
+        }
 	}
 
 	//Output method
 	void display(){
-		table = new int*[numRows];
-		for (int i = 0; i < numRows; i++) {
-			table[i] = new int[numCols];
-		}
-
+	    /*
+		//Reads each number from the last section of the file and places it in the correct place in the table
 		for (int i = 0; i < numRows; i++) {
 			for (int j = 0; j < numCols; j++) {
 				int num;
+				//Must use cin >> so it selects the ints and no whitespaces
 				cin >> num;
-				table[i][j] = num;
+				if(num != NULL)
+                    table[i][j] = num;
+                else
+                    table[i][j] = NULL;
 			}
 		}
+		*/
+
+		//Prints out the names of the columns. If it is the last name for the columns instead of adding a ',' to the end, it breaks the line
 
         for(int i = 0; i < numCols; i++){
             if(i == numCols - 1)
@@ -42,6 +51,10 @@ public:
                 cout << colNames[i] << ",";
         }
 
+
+
+        //Prints out the names of the rows. Works same as above.
+
         for(int i = 0; i < numRows; i++){
             if(i == numRows - 1)
                 cout << rowNames[i] << '\n';
@@ -49,22 +62,25 @@ public:
                 cout << rowNames[i] << ",";
         }
 
+
+        //Prints out the contents of the table. Adds a space after each one and break the line after each row.
         for(int i = 0; i < numRows; i++){
             for(int j = 0; j < numCols; j++){
                 cout << table[i][j] << " ";
             }
             cout << endl;
         }
-                    //cout << "(" << i << "," << j << ")" << " -> " << table[i][j] << endl;
-
 	}
 
 	//Setters
-	void setRowName(int row, char* name){
-        rowNames[row] = name;
+	void setRowName(int row, const char* name){
+        rowNames[row] = (char*)name;
 	}
-	void setColName(int col, char* name){
-        colNames[col] = name;
+	void setColName(int col, const char* name){
+        colNames[col] = (char*)name;
+	}
+	void constructTable(int row, int col, int val){
+        table[row][col] = val;
 	}
 	int* operator[](int i); //Get row i
 
@@ -81,9 +97,50 @@ public:
 	int getNumberCols(){
         return numCols;
 	}
-	DataFrame* getColumns(int* columns, int cLen);
-	DataFrame* getRows(int* rows, int rLen);
+	DataFrame* getColumns(int* columns, int cLen){
+        DataFrame* tempCols = new DataFrame(numRows, cLen);
+
+        for(int i = 0; i < numRows; i++){
+            for(int j = 0; j < cLen; j++){
+                int col = columns[j];
+                tempCols->constructTable(i, j, table[i][col]);
+                //cout << "++++++++++++++" << colNames[col] << "++++++++++++++" << endl;
+                tempCols->setColName(j, colNames[col]);
+                //tempCols->table[i][j] = table[i][col];
+            }
+            //cout << "**********" << rowNames[i] << "***************" << endl;
+            tempCols->setRowName(i, rowNames[i]);
+        }
+    return tempCols;
+	}
+
+    DataFrame* getRows(int* rows, int rLen){
+        DataFrame* tempRows = new DataFrame(rLen, numCols);
+
+        for(int i = 0; i < numCols; i++){
+            for(int j = 0; j < rLen; j++){
+                int row = rows[j];
+                tempRows->constructTable(j, i, table[row][i]);
+                tempRows->setRowName(j, rowNames[row]);
+            }
+            tempRows->setColName(i, colNames[i]);
+        }
+        return tempRows;
+	}
+
+
+
+
+
+
+
+
+
 	DataFrame* getRowsCols(int* rows, int rLen, int* cols, int cLen);
+
+	int** getTable(){
+        return table;
+	}
 
 	//Destructor
 	~DataFrame();
@@ -120,14 +177,17 @@ int main() {
         }
             //Signals end of name[]
             name[j] = '\0';
+            //Added 1 to 'i' so when user chooses to change the name using column #, the numbering starts at 1 instead of 0
             firstDF->setColName(i, name);
     }
+/*
+    cout << "firstDF col names: ";
+    for(int i = 0; i < nCols; i++){
+        cout << firstDF->getColNames()[i];
+    }
+    cout << endl;
+    */
 
-    //for(int i = 0; i < nCols; i++){
-      //  cout << firstDF->getColNames()[i] << " ";
-    //}
-    //cout << endl;
-    //cout << "**********************" << endl;
 	//Third line: string seperated by a comma (nRows of them); representing row names
 	//Exact same as above but this time setting the column names
     for(int i = 0; i < nRows; i++){
@@ -143,12 +203,40 @@ int main() {
             name[j] = '\0';
             firstDF->setRowName(i, name);
     }
+    /*
+    cout << "firstDF row names: ";
+    for(int i = 0; i < nRows; i++){
+        cout << firstDF->getRowNames()[i];
+    }
+    cout << endl;
+    */
 
-    firstDF->display();
+		for (int i = 0; i < firstDF->getNumberRows(); i++) {
+			for (int j = 0; j < firstDF->getNumberCols(); j++) {
+				int num;
+				//Must use cin >> so it selects the ints and no whitespaces
+				cin >> num;
+                    firstDF->constructTable(i, j, num);
+                    //firstDF->table[i][j] = num;
+			}
+		}
+		/*
+		cout << "firstDF table: ";
+		for(int i = 0; i < nRows; i++){
+            for(int j = 0; j < nCols; j++){
+                cout << firstDF->getTable()[i][j];
+            }
+		}
+		cout << endl;
 
-    //for(int i = 0; i < nRows; i++){
-      //  cout << firstDF->getRowNames()[i] << endl;
-    //}
+		cout << "firstDF numCols: " << firstDF->getNumberCols() << endl;
+		cout << "firstDF numRows: " << firstDF->getNumberRows() << endl;
+
+		*/
+
+
+
+
 	//Fourth line and more: nCols number of integers in each of the nRows rows seperated by a space
 	//						in between integers in the same row
 
@@ -159,12 +247,16 @@ int main() {
 	// - row names of the dataframe
 	// - contents of the table in the dataframe
 
+    firstDF->display();
+
+    cout << endl;
+    cout << "_______________________________________________________" << endl;
+    cout << endl;
 
 	//TODO: complete code for the above comment block^^^
 
 	//Execute the following code when i think its complete??
 
-/*
 	for (int i = 0; i < 3; i++) {
 		cin >> selectC[i];
 	}
@@ -173,6 +265,9 @@ int main() {
 
 	(*tempColumns).display();
 
+    cout << endl;
+    cout << "_______________________________________________________" << endl;
+    cout << endl;
 	//Change the row names of select rows
 
 	(*tempColumns).setRowName(2, "Jack");
@@ -180,6 +275,9 @@ int main() {
 
 	(*tempColumns).display();
 
+    cout << endl;
+    cout << "_______________________________________________________" << endl;
+    cout << endl;
 	//Read the row numbers that you want to extract
 
 	for (int i = 0; i < 10; i++) {
@@ -190,13 +288,17 @@ int main() {
 
 	(*tempRows).display();
 
+    cout << endl;
+    cout << "_______________________________________________________" << endl;
+    cout << endl;
+
 	//Change the column names of selected columns
 
 	(*tempRows).setColName(2, "Scores");
 	(*tempRows).setColName(3, "Values");
 
 	(*tempRows).display();
-
+/*
 	//Extract the rows in selectR and columns in selectC
 
 	DataFrame* tempColsRows = (*firstDF).getRowsCols(selectR, 10, selectC, 3);
@@ -221,4 +323,4 @@ int main() {
 
 	delete myTable;
 	*/
-}
+    }
