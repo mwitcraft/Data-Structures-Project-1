@@ -2,21 +2,29 @@
 using namespace std;
 
 int main(){
+    int numRows, numCols;
     char c;
-    int size = 0;
+    char** colNames;
+    char** rowNames;
+    char* curName = new char[10];
 
-    cin.get(c);
+    cin >> numRows >> numCols;
 
-    while (!cin.eof() && c != '\n'){
-        if(c != ','){
-            size++;
-        }else{
-            size = 0;
-        }
+    rowNames = new char*[numRows];
 
+    cin >> c;
+    int i = 0;
+    while(c != '\n'){
+        curName[i] = c;
         cin.get(c);
+        i++;
+        if(c == ',' || c == '\n'){
+            curName[i] = '\0';
+            cout << curName << endl;
+            curName = new char[10];
+            cin.get(c);
+            i = 0;
+        }
     }
-
-    cout << size << endl;
-
+    cout << endl;
 }
