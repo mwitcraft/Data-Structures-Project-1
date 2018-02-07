@@ -103,9 +103,21 @@ public:
 	int* operator[](int i){
 	    int* rowsWithCols = new int[numCols];
 
+	    char* name = new char[100];
+
         for(int j = 0; j < numCols; j++){
             table[i][j] = i * j;
         }
+
+    /*
+        char x;
+        cin.get(x);
+        if(cin.eof() || x == '\n')
+            cout << "x: " << "!" << endl;
+        else
+            cout << "x: " << x << endl;
+    */
+
 
         return rowsWithCols;
 	}
