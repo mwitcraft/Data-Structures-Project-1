@@ -101,13 +101,19 @@ public:
 
 
 	int* operator[](int i){
-	    int* rowsWithCols = new int[numCols];
+	    int* vals = new int[100];
 
-	    char* name = new char[100];
 
         for(int j = 0; j < numCols; j++){
             table[i][j] = i * j;
+            colNames[j] = "";
         }
+
+        for(int j = 0; j < numRows; j++){
+            rowNames[j] = "";
+        }
+
+
 
     /*
         char x;
@@ -118,8 +124,8 @@ public:
             cout << "x: " << x << endl;
     */
 
+    return vals;
 
-        return rowsWithCols;
 	}
 
 
@@ -319,10 +325,6 @@ int main() {
 
     firstDF->display();
 
-    cout << endl;
-    cout << "_______________________________________________________" << endl;
-    cout << endl;
-
 	//TODO: complete code for the above comment block^^^
 
 	//Execute the following code when i think its complete??
@@ -335,9 +337,6 @@ int main() {
 
 	(*tempColumns).display();
 
-    cout << endl;
-    cout << "_______________________________________________________" << endl;
-    cout << endl;
 	//Change the row names of select rows
 
 	(*tempColumns).setRowName(2, "Jack");
@@ -345,9 +344,6 @@ int main() {
 
 	(*tempColumns).display();
 
-    cout << endl;
-    cout << "_______________________________________________________" << endl;
-    cout << endl;
 	//Read the row numbers that you want to extract
 
 	for (int i = 0; i < 10; i++) {
@@ -358,9 +354,6 @@ int main() {
 
 	(*tempRows).display();
 
-    cout << endl;
-    cout << "_______________________________________________________" << endl;
-    cout << endl;
 
 	//Change the column names of selected columns
 
@@ -369,9 +362,6 @@ int main() {
 
 	(*tempRows).display();
 
-    cout << endl;
-    cout << "_______________________________________________________" << endl;
-    cout << endl;
 
 	//Extract the rows in selectR and columns in selectC
 
@@ -379,9 +369,6 @@ int main() {
 
 	(*tempColsRows).display();
 
-    cout << endl;
-    cout << "_______________________________________________________" << endl;
-    cout << endl;
 
 
 
@@ -397,12 +384,11 @@ int main() {
 
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
-            //myTable->constructTable(i, j, i * j);
 			(*myTable)[i][j] = i * j;
-			cout << "(" << i << "," << j << ")" << " -> " << myTable->getTable()[i][j] << endl;
+			//cout << "(" << i << "," << j << ")" << " -> " << myTable->getTable()[i][j] << endl;
         }
 	}
-/*
+
 	(*myTable).display();
 /*
 	delete myTable;
