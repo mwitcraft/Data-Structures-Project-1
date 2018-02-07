@@ -82,7 +82,48 @@ public:
 	void constructTable(int row, int col, int val){
         table[row][col] = val;
 	}
-	int* operator[](int i); //Get row i
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	int* operator[](int i){
+	    int* rowsWithCols = new int[numCols];
+
+        for(int j = 0; j < numCols; j++){
+            table[i][j] = i * j;
+        }
+
+        return rowsWithCols;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//Get row i
 
 	//Getters
 	char** getRowNames(){
@@ -136,14 +177,31 @@ public:
 
 
 
-	DataFrame* getRowsCols(int* rows, int rLen, int* cols, int cLen);
+	DataFrame* getRowsCols(int* rows, int rLen, int* cols, int cLen){
+            DataFrame* tempRowsCols = new DataFrame(rLen, cLen);
+
+            for(int i = 0; i < cLen; i++){
+                int col = cols[i];
+                for(int j = 0; j < rLen; j++){
+                    int row = rows[j];
+                    tempRowsCols->constructTable(j, i, table[row][col]);
+                    tempRowsCols->setRowName(j, rowNames[row]);
+                }
+                tempRowsCols->setColName(i, colNames[col]);
+            }
+            return tempRowsCols;
+	}
 
 	int** getTable(){
         return table;
 	}
 
 	//Destructor
-	~DataFrame();
+	~DataFrame(){
+        delete [] table;
+        delete [] rowNames;
+        delete [] colNames;
+	}
 };
 
 int main() {
@@ -298,29 +356,44 @@ int main() {
 	(*tempRows).setColName(3, "Values");
 
 	(*tempRows).display();
-/*
+
+    cout << endl;
+    cout << "_______________________________________________________" << endl;
+    cout << endl;
+
 	//Extract the rows in selectR and columns in selectC
 
 	DataFrame* tempColsRows = (*firstDF).getRowsCols(selectR, 10, selectC, 3);
 
 	(*tempColsRows).display();
 
+    cout << endl;
+    cout << "_______________________________________________________" << endl;
+    cout << endl;
+
+
+
 	delete tempRows;
-	delete tempCols;
+	delete tempColumns;
 	delete tempColsRows;
 
 	//Sample code - must execute
 
 	DataFrame* myTable = new DataFrame(5, 5);
 
+
+
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
+            //myTable->constructTable(i, j, i * j);
 			(*myTable)[i][j] = i * j;
-		}
+			cout << "(" << i << "," << j << ")" << " -> " << myTable->getTable()[i][j] << endl;
+        }
 	}
-
+/*
 	(*myTable).display();
-
+/*
 	delete myTable;
 	*/
+
     }
